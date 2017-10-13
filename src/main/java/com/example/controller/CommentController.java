@@ -1,7 +1,10 @@
 package com.example.controller;
 
 import com.example.model.Comment;
+import com.example.model.Postingan;
 import com.example.repository.CommentRepository;
+import com.example.repository.PostinganRepository;
+import com.example.request.CommentRequest;
 import com.example.utility.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +25,9 @@ public class CommentController {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private PostinganRepository postinganRepository;
 
     /**
      * <a href="https://cloud.google.com/appengine/docs/flexible/java/how-instances-are-managed#health_checking">
@@ -37,8 +44,12 @@ public class CommentController {
     @PostMapping
     @RequestMapping(value = "/saveComment", method = RequestMethod.POST)
     @ApiOperation(value = "Save comment", notes = "save comment info to DB")
-    public void saveThread(@RequestBody @Valid Comment comment) throws Exception{
-        this.commentRepository.save(BeanMapper.map(comment, Comment.class));
+    public void saveThread(@RequestBody @Valid CommentRequest comment, @RequestParam String threadId, @RequestParam String memberId) throws Exception{
+        Comment newComment = new Comment();
+        newComment.setThreadId(threadId);
+        newComment.setMemberId(memberId);
+        newComment.setMessage(comment.getMessage());
+        this.commentRepository.save(newComment);
     }
 
     @GetMapping
@@ -57,12 +68,13 @@ public class CommentController {
         this.commentRepository.save(comment);
     }
 
-//    @PostMapping
-//    @RequestMapping(value = "/updateThreadByThreadId", method = RequestMethod.POST)
-//    @ApiOperation(value = "Update Postingan By ThreadId", notes = "UpdateThreadByThreadId")
-//    public void updateThreadByThreadId(@RequestBody Postingan threadReq) throws Exception {
-//        Postingan threadUpdate = this.threadRepository.findByEventIdAndMarkForDeleteIsFalse(threadReq.getThreadId());
-//        thread.setMarkForDelete(true);
-//        this.threadRepository.save(thread);
-//    }
+    @PostMapping
+    @RequestMapping(value = "/updateCommentByCommentId", method = RequestMethod.POST)
+    @ApiOperation(value = "Update Comment By CommentId", notes = "UpdateCommentByCommentId")
+    public void updateCommentByCommentId(@RequestBody CommentRequest request, @RequestParam String commentId) throws Exception {
+        Comment existing = this.commentRepository.findByCommentIdAndMarkForDeleteIsFalse(commentId);
+        existing.setMessage(request.getMessage());
+        existing.setModifiedDate(new Date());
+        this.commentRepository.save(existing);
+    }
 }

@@ -1,13 +1,12 @@
 package com.example.model;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import net.karneim.pojobuilder.GeneratePojoBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +16,7 @@ import java.util.List;
 @Document
 public class Postingan implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7316275754622016035L;
 
     @Id
     @Field(value = "threadId")
@@ -40,6 +39,11 @@ public class Postingan implements Serializable{
 
     @Field(value = "markForDelete")
     private boolean markForDelete;
+
+    public Postingan() {
+        this.setMarkForDelete(false);
+        this.setCreatedDate(new Date());
+    }
 
     public String getThreadId() {
         return threadId;

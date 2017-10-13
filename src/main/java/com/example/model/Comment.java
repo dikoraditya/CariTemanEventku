@@ -1,14 +1,12 @@
 package com.example.model;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import net.karneim.pojobuilder.GeneratePojoBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by diko.raditya on 31/08/2017.
@@ -17,7 +15,7 @@ import java.util.List;
 @Document
 public class Comment implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4929518077669574317L;
 
     @Id
     @Field(value = "commentId")
@@ -34,6 +32,19 @@ public class Comment implements Serializable{
 
     @Field(value = "markForDelete")
     private boolean markForDelete;
+
+    @Field(value = "message")
+    private String message;
+
+    @Field(value = "modifiedDate")
+    private Date modifiedDate;
+
+    public Comment()
+    {
+        this.setMarkForDelete(false);
+        this.setCreatedDate(new Date());
+        this.setModifiedDate(null);
+    }
 
     public String getCommentId() {
         return commentId;
@@ -75,14 +86,32 @@ public class Comment implements Serializable{
         this.markForDelete = markForDelete;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         return "Comment{" +
                 "commentId=" + commentId +
                 ", threadId=" + threadId +
                 ", createdDate=" + createdDate +
                 ", memberId=" + memberId +
                 ", markForDelete=" + markForDelete +
+                ", message=" + message +
+                ", modifiedDate=" + modifiedDate +
                 '}';
     }
 }

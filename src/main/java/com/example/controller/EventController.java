@@ -4,15 +4,17 @@ import com.example.model.*;
 import com.example.model.Postingan;
 import com.example.repository.CommentRepository;
 import com.example.repository.EventRepository;
-import com.example.repository.ThreadRepository;
+import com.example.repository.PostinganRepository;
+import com.example.request.EventRequest;
 import com.example.utility.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class EventController {
     private EventRepository eventRepository;
 
     @Autowired
-    private ThreadRepository threadRepository;
+    private PostinganRepository postinganRepository;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -68,12 +70,52 @@ public class EventController {
     @PostMapping
     @RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
     @ApiOperation(value = "Delete Event By Id", notes =  "Delete event by eventId")
-    public void deleteEventByEventId(@RequestParam String eventId) throws Exception {
+    public Boolean deleteEventByEventId(@RequestParam String eventId) throws Exception {
         Event event = this.eventRepository.findByEventIdAndMarkForDeleteIsFalse(eventId);
-        List<Postingan> postinganList = this.threadRepository.findAllByEventIdAndMarkForDeleteIsFalse(event.getEventId());
-        List<Comment> commentList = new ArrayList<>();
-        postinganList.forEach(threadInEvent -> {
-            this.commentRepository.findAllByThreadIdAndMarkForDeleteIsFalse(threadInEvent.getThreadId());
+        List<Postingan> postinganList = this.postinganRepository.findAllByEventIdAndMarkForDeleteIsFalse(event.getEventId());
+        postinganList.forEach(postinganInEvent -> {
+            List<Comment> commentList =
+                    this.commentRepository.findAllByThreadIdAndMarkForDeleteIsFalse(postinganInEvent.getThreadId());
+            commentList.forEach(comment -> comment.setMarkForDelete(true));
+            commentRepository.save(commentList);
+
+            postinganInEvent.setMarkForDelete(true);
+            postinganRepository.save(postinganInEvent);
         });
+        event.setMarkForDelete(true);
+        return true;
     }
+
+    @PostMapping(value = "/createEvent")
+    @ApiOperation(value = "Create New Event", notes =  "Create new event")
+    public Boolean createNewEvent(@RequestBody EventRequest event) throws Exception
+    {
+        Event newEvent = new Event();
+        BeanUtils.copyProperties(event, newEvent);
+        String[] eventDates = event.getEventDate().split("-");
+        String[] eventDateTime = event.getEventDateHour().split(":");
+        Date eventDate = new Date(Integer.parseInt(eventDates[0]),
+                Integer.parseInt(eventDates[1]), Integer.parseInt(eventDates[2]),
+                Integer.parseInt(eventDateTime[0]), Integer.parseInt(eventDateTime[1]));
+        newEvent.setEventDate(eventDate);
+        this.eventRepository.save(newEvent);
+        
+        
+        return true;
+    }
+
+    @PostMapping(value = "/updateEvent")
+    @ApiOperation(value = "Update Event", notes =  "Update event")
+    public Boolean updateEvent(@RequestBody EventRequest event, @RequestParam String eventId) throws Exception
+    {
+        Event existing = this.findEventByEventId(eventId);
+        if(existing == null)
+            throw new IllegalStateException("Event does not exist. Failed to update event");
+
+        BeanUtils.copyProperties(event, existing, "id", "markForDelete");
+        this.eventRepository.save(existing);
+
+        return true;
+    }
+
 }

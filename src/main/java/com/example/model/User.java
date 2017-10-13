@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Document
 public class User implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8788465476845746168L;
 
     @Id
     @Field(value = "userId")

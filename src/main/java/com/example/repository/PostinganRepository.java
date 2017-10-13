@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Diko Raditya on 12/10/2017.
  */
 @Repository
-public interface ThreadRepository extends MongoRepository<Postingan, String>{
+public interface PostinganRepository extends MongoRepository<Postingan, String>{
     Postingan findByEventIdAndMarkForDeleteIsFalse(String eventId);
 
     List<Postingan> findAllByEventIdAndMarkForDeleteIsFalse(String eventId);

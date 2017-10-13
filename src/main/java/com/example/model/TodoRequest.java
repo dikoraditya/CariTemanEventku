@@ -13,7 +13,7 @@ import java.io.Serializable;
 @GeneratePojoBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TodoRequest implements Serializable{
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5052863378601543772L;
 
     @NotNull
     private String todoId;

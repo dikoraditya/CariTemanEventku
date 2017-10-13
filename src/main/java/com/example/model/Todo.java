@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Document
 public class Todo implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4595815189235196646L;
 
     @Id
     @Field(value = "toDoId")

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by diko.raditya on 31/08/2017.
@@ -15,7 +15,7 @@ import java.sql.Date;
 @Document
 public class Event implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1298278642962273525L;
 
     @Id
     @Field(value = "eventId")
@@ -50,6 +50,12 @@ public class Event implements Serializable{
 
     @Field(value = "markForDelete")
     private boolean markForDelete;
+
+    public Event()
+    {
+        this.setCreatedDate(new Date());
+        this.setMarkForDelete(false);
+    }
 
     public String getEventId() {
         return eventId;

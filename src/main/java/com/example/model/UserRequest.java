@@ -12,7 +12,7 @@ import java.io.Serializable;
 @GeneratePojoBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest implements Serializable{
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3969920444036686167L;
 
     @NotNull
     private String userId;
