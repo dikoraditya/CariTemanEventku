@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,9 +69,9 @@ public class EventController {
     }
 
     @GetMapping
-    @RequestMapping(value = "/getEventById", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail/{eventId}", method = RequestMethod.GET)
     @ApiOperation(value = "Find Event By Id", notes = "find Event By Id")
-    public Event findEventByEventId(@RequestParam String eventId) throws Exception {
+    public Event findEventByEventId(@PathVariable String eventId) throws Exception {
         return this.eventRepository.findByEventIdAndMarkForDeleteIsFalse(eventId);
     }
 
@@ -107,10 +108,8 @@ public class EventController {
         newEvent.setEventDate(eventDate);
         Calendar calTomorrow = Calendar.getInstance();
         calTomorrow.setTime(new Date());
-        calTomorrow.add(Calendar.DATE, 1);
-        Calendar calYesterday = Calendar.getInstance();
-        calYesterday.setTime(new Date());
-        calYesterday.add(Calendar.DATE, -1);
+        SimpleDateFormat sdfDay = new SimpleDateFormat("EEEE");
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM");
         Date date = new Date();
         if(date.getDate()==(Integer.parseInt(eventDates[2]))) {
                         newEvent.setDateResponse("Today, at " + event.getEventDateHour());
@@ -122,9 +121,10 @@ public class EventController {
             newEvent.setDateResponse("Yesterday, at " + event.getEventDateHour());
         }
         else{
-            newEvent.setDateResponse(event.getEventDate() + ", at "+ event.getEventDateHour());
+            System.out.println(eventDate);
+            newEvent.setDateResponse(sdfDay.format(eventDate) + ", "+ sdfMonth.format(eventDate) + " " + eventDates[2] + " at " + event.getEventDateHour());
+            System.out.println(newEvent.getDateResponse());
         }
-
         this.eventRepository.save(newEvent);
         return true;
     }

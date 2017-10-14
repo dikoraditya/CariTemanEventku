@@ -60,6 +60,9 @@ public class Event implements Serializable{
     @Field(value = "dateResponse")
     private String dateResponse;
 
+    @Field(value = "description")
+    private String description;
+
     @Field(value = "markForDelete")
     private boolean markForDelete;
 
@@ -173,20 +176,24 @@ public class Event implements Serializable{
         this.hostImg = hostImg;
     }
 
-    public String gethostedBy() {
-        return hostedBy;
-    }
-
-    public void sethostedBy(String hostedBy) {
-        this.hostedBy = hostedBy;
-    }
-
     public String getDateResponse() {
         return dateResponse;
     }
 
     public void setDateResponse(String dateResponse) {
         this.dateResponse = dateResponse;
+    }
+
+    public String getHostedBy() {
+        return hostedBy;
+    }
+
+    public void setHostedBy(String hostedBy) {
+        this.hostedBy = hostedBy;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
@@ -206,7 +213,12 @@ public class Event implements Serializable{
                 ", hostImg='" + hostImg + '\'' +
                 ", hostedBy='" + hostedBy + '\'' +
                 ", dateResponse='" + dateResponse + '\'' +
+                ", description='" + description + '\'' +
                 ", markForDelete=" + markForDelete +
                 '}';
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

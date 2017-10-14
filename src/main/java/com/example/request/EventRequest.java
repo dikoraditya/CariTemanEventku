@@ -23,6 +23,7 @@ public class EventRequest implements Serializable{
     private int totalPeople;
     private int quota;
     private String hostedBy;
+    private String description;
 
     public EventRequest(){}
 
@@ -90,20 +91,28 @@ public class EventRequest implements Serializable{
         this.totalPeople = totalPeople;
     }
 
-    public int getquota() {
-        return quota;
-    }
-
-    public void setquota(int quota) {
-        this.quota = quota;
-    }
-
     public String getHostedBy() {
         return hostedBy;
     }
 
     public void setHostedBy(String hostedBy) {
         this.hostedBy = hostedBy;
+    }
+
+    public int getQuota() {
+        return quota;
+    }
+
+    public void setQuota(int quota) {
+        this.quota = quota;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -119,6 +128,7 @@ public class EventRequest implements Serializable{
                 ", totalPeople=" + totalPeople +
                 ", quota=" + quota +
                 ", hostedBy='" + hostedBy + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }
