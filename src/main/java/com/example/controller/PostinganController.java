@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Comment;
 import com.example.model.Postingan;
+import com.example.model.PostinganResponse;
 import com.example.repository.CommentRepository;
 import com.example.repository.PostinganRepository;
 import com.example.request.PostinganRequest;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by diko.raditya on 30/08/2017.
@@ -49,14 +52,49 @@ public class PostinganController {
         Postingan newPostingan = new Postingan();
         BeanUtils.copyProperties(postingan, newPostingan);
         newPostingan.setEventId(eventId);
-        this.postinganRepository.save(BeanMapper.map(postingan, Postingan.class));
+        String[] eventDates = postingan.getPostinganDate().split("-");
+        String[] eventDateTime = postingan.getPostinganHour().split(":");
+        String neew = postingan.getPostinganDate()+":"+postingan.getPostinganHour();
+        Date eventDate = new SimpleDateFormat("yyyy-MM-dd:HH:mm").parse(neew);
+        Date date = new Date();
+        if(TimeUnit.MILLISECONDS.toDays(date.getTime() - eventDate.getTime())==1) {
+            newPostingan.setPostinganDate("Yesterday");
+        }
+        else {
+            if(TimeUnit.MILLISECONDS.toSeconds(date.getTime() - eventDate.getTime())<60) {
+                newPostingan.setPostinganDate(Long.toString(TimeUnit.MILLISECONDS.toSeconds(date.getTime() - eventDate.getTime())) + " seconds ago");
+            }
+            else if(TimeUnit.MILLISECONDS.toMinutes(date.getTime() - eventDate.getTime())<60) {
+                newPostingan.setPostinganDate(Long.toString(TimeUnit.MILLISECONDS.toMinutes(date.getTime() - eventDate.getTime())) + " minutes ago");
+            }
+            else if(TimeUnit.MILLISECONDS.toHours(date.getTime() - eventDate.getTime())<24) {
+                newPostingan.setPostinganDate(Long.toString(TimeUnit.MILLISECONDS.toHours(date.getTime() - eventDate.getTime())) + " hours ago");
+            }
+            else {
+                newPostingan.setPostinganDate(Long.toString(TimeUnit.MILLISECONDS.toDays(date.getTime() - eventDate.getTime())) + " days ago");
+            }
+        }
+        this.postinganRepository.save(newPostingan);
     }
 
     @GetMapping
-    @RequestMapping(value = "/getAllThreadByEventId", method = RequestMethod.GET)
+    @RequestMapping(value = "/id/{eventId}", method = RequestMethod.GET)
     @ApiOperation(value = "Find All Postingan By Event Id", notes = "find all Postingan By EventID from DB")
-    public List<Postingan> findThreadByEventId(@RequestParam String eventId) throws Exception {
-        return this.postinganRepository.findAllByEventIdAndMarkForDeleteIsFalse(eventId);
+    public PostinganResponse findThreadByEventId(@PathVariable String eventId) throws Exception {
+        PostinganResponse PostinganResponse = new PostinganResponse();
+        try {
+            List<Postingan> result = this.postinganRepository.findAllByEventIdAndMarkForDeleteIsFalse(eventId);
+            PostinganResponse.setResults(result);
+            PostinganResponse.setCount(result.size());
+        }
+        catch (Exception e){
+            PostinganResponse.setStatus("failed");
+            PostinganResponse.setMessage(e.getMessage());
+            return PostinganResponse;
+        }
+        PostinganResponse.setStatus("success");
+        PostinganResponse.setMessage("success");
+        return PostinganResponse;    
     }
 
     @PostMapping
@@ -83,6 +121,26 @@ public class PostinganController {
         threadUpdate.setMemberId(threadReq.getMemberId());
         threadUpdate.setMessage(threadReq.getMessage());
         this.postinganRepository.save(threadUpdate);
+        return true;
+    }
+
+    @PostMapping
+    @RequestMapping(value = "/like/id/{threadId}", method = RequestMethod.POST)
+    @ApiOperation(value = "Like a post", notes = "Like a post")
+    public Boolean likePost(@PathVariable String threadId) {
+        Postingan postingan = this.postinganRepository.findByThreadIdAndMarkForDeleteIsFalse(threadId);
+        postingan.setLikes(postingan.getLikes()+1);
+        this.postinganRepository.save(postingan);
+        return true;
+    }
+
+    @PostMapping
+    @RequestMapping(value = "/unlike/id/{threadId}", method = RequestMethod.POST)
+    @ApiOperation(value = "unLike a post", notes = "unLike a post")
+    public Boolean unlikePost(@PathVariable String threadId) {
+        Postingan postingan = this.postinganRepository.findByThreadIdAndMarkForDeleteIsFalse(threadId);
+        postingan.setLikes(postingan.getLikes()-1);
+        this.postinganRepository.save(postingan);
         return true;
     }
 }

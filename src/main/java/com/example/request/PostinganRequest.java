@@ -14,6 +14,9 @@ public class PostinganRequest implements Serializable {
     private static final long serialVersionUID = 1717375068553074499L;
     private String message;
     private String memberId;
+    private String postinganDate;
+    private String postinganHour;
+
 
     public PostinganRequest() {}
 
@@ -31,5 +34,31 @@ public class PostinganRequest implements Serializable {
 
     public void setMemberId(String memberId) {
         this.memberId = memberId;
+    }
+
+    public String getPostinganDate() {
+        return postinganDate;
+    }
+
+    public void setPostinganDate(String postinganDate) {
+        this.postinganDate = postinganDate;
+    }
+
+    public String getPostinganHour() {
+        return postinganHour;
+    }
+
+    public void setPostinganHour(String postinganHour) {
+        this.postinganHour = postinganHour;
+    }
+
+    @Override
+    public String toString() {
+        return "PostinganRequest{" +
+                "message='" + message + '\'' +
+                ", memberId='" + memberId + '\'' +
+                ", postinganDate='" + postinganDate + '\'' +
+                ", postinganHour='" + postinganHour + '\'' +
+                '}';
     }
 }

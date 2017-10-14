@@ -36,6 +36,9 @@ public class Comment implements Serializable{
     @Field(value = "message")
     private String message;
 
+    @Field(value = "commentDate")
+    private String commentDate;
+
     @Field(value = "modifiedDate")
     private Date modifiedDate;
 
@@ -102,15 +105,24 @@ public class Comment implements Serializable{
         this.modifiedDate = modifiedDate;
     }
 
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
-                "commentId=" + commentId +
-                ", threadId=" + threadId +
+                "commentId='" + commentId + '\'' +
+                ", threadId='" + threadId + '\'' +
                 ", createdDate=" + createdDate +
-                ", memberId=" + memberId +
+                ", memberId='" + memberId + '\'' +
                 ", markForDelete=" + markForDelete +
-                ", message=" + message +
+                ", message='" + message + '\'' +
+                ", commentDate='" + commentDate + '\'' +
                 ", modifiedDate=" + modifiedDate +
                 '}';
     }

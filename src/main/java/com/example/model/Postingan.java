@@ -37,6 +37,12 @@ public class Postingan implements Serializable{
     @Field(value = "comments")
     private List<String> comments;
 
+    @Field(value = "likes")
+    private int likes;
+
+    @Field(value = "postinganDate")
+    private String postinganDate;
+
     @Field(value = "markForDelete")
     private boolean markForDelete;
 
@@ -101,15 +107,33 @@ public class Postingan implements Serializable{
         this.markForDelete = markForDelete;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getPostinganDate() {
+        return postinganDate;
+    }
+
+    public void setPostinganDate(String postinganDate) {
+        this.postinganDate = postinganDate;
+    }
+
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         return "Postingan{" +
-                "threadId=" + threadId +
-                ", eventId=" + eventId +
+                "threadId='" + threadId + '\'' +
+                ", eventId='" + eventId + '\'' +
                 ", createdDate=" + createdDate +
-                ", message=" + message +
-                ", memberId=" + memberId +
+                ", message='" + message + '\'' +
+                ", memberId='" + memberId + '\'' +
                 ", comments=" + comments +
+                ", likes=" + likes +
+                ", postinganDate='" + postinganDate + '\'' +
                 ", markForDelete=" + markForDelete +
                 '}';
     }

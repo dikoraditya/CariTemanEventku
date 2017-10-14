@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by diko.raditya on 30/08/2017.
@@ -71,8 +73,21 @@ public class EventController {
     @GetMapping
     @RequestMapping(value = "/detail/{eventId}", method = RequestMethod.GET)
     @ApiOperation(value = "Find Event By Id", notes = "find Event By Id")
-    public Event findEventByEventId(@PathVariable String eventId) throws Exception {
-        return this.eventRepository.findByEventIdAndMarkForDeleteIsFalse(eventId);
+    public EventResponseSingle findEventByEventId(@PathVariable String eventId) throws Exception {
+        EventResponseSingle eventResponseSingle = new EventResponseSingle();
+        try{
+            Event event = this.eventRepository.findByEventIdAndMarkForDeleteIsFalse(eventId);
+            List<Event> eventList = new ArrayList<>();
+            eventList.add(event);
+            eventResponseSingle.setResults(eventList);
+        } catch (Exception e) {
+            eventResponseSingle.setStatus("Failed");
+            eventResponseSingle.setMessage(e.getMessage());
+            return  eventResponseSingle;
+        }
+        eventResponseSingle.setStatus("success");
+        eventResponseSingle.setMessage("success");
+        return eventResponseSingle;
     }
 
     @PostMapping
@@ -102,9 +117,8 @@ public class EventController {
         BeanUtils.copyProperties(event, newEvent);
         String[] eventDates = event.getEventDate().split("-");
         String[] eventDateTime = event.getEventDateHour().split(":");
-        Date eventDate = new Date(Integer.parseInt(eventDates[0]),
-                Integer.parseInt(eventDates[1]), Integer.parseInt(eventDates[2]),
-                Integer.parseInt(eventDateTime[0]), Integer.parseInt(eventDateTime[1]));
+        String neew = event.getEventDate()+":"+event.getEventDateHour();
+        Date eventDate = new SimpleDateFormat("yyyy-MM-dd:HH:mm").parse(neew);
         newEvent.setEventDate(eventDate);
         Calendar calTomorrow = Calendar.getInstance();
         calTomorrow.setTime(new Date());
@@ -121,9 +135,7 @@ public class EventController {
             newEvent.setDateResponse("Yesterday, at " + event.getEventDateHour());
         }
         else{
-            System.out.println(eventDate);
             newEvent.setDateResponse(sdfDay.format(eventDate) + ", "+ sdfMonth.format(eventDate) + " " + eventDates[2] + " at " + event.getEventDateHour());
-            System.out.println(newEvent.getDateResponse());
         }
         this.eventRepository.save(newEvent);
         return true;
@@ -133,7 +145,7 @@ public class EventController {
     @ApiOperation(value = "Update Event", notes =  "Update event")
     public Boolean updateEvent(@RequestBody EventRequest event, @RequestParam String eventId) throws Exception
     {
-        Event existing = this.findEventByEventId(eventId);
+        Event existing = this.findEventByEventId(eventId).getResults().get(0);
         if(existing == null)
             throw new IllegalStateException("Event does not exist. Failed to update event");
 

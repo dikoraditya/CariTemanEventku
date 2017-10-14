@@ -13,5 +13,7 @@ import java.util.List;
 public interface PostinganRepository extends MongoRepository<Postingan, String>{
     Postingan findByEventIdAndMarkForDeleteIsFalse(String eventId);
 
+    Postingan findByThreadIdAndMarkForDeleteIsFalse(String threadId);
+
     List<Postingan> findAllByEventIdAndMarkForDeleteIsFalse(String eventId);
 }
