@@ -50,8 +50,21 @@ public class EventController {
     @GetMapping
     @RequestMapping(value = "/getAllEvent", method = RequestMethod.GET)
     @ApiOperation(value = "Find All Event", notes = "find all Event info from DB")
-    public List<Event> findAllEvent() throws Exception {
-        return this.eventRepository.findAllByMarkForDeleteIsFalse();
+    public EventResponse findAllEvent() throws Exception {
+        EventResponse eventResponse = new EventResponse();
+        try {
+            List<Event> result = this.eventRepository.findAllByMarkForDeleteIsFalse();
+            eventResponse.setResults(result);
+            eventResponse.setCount(result.size());
+        }
+        catch (Exception e){
+            eventResponse.setStatus("failed");
+            eventResponse.setMessage(e.getMessage());
+            return eventResponse;
+        }
+        eventResponse.setStatus("success");
+        eventResponse.setMessage("success");
+        return eventResponse;
     }
 
     @GetMapping
@@ -99,19 +112,17 @@ public class EventController {
         calYesterday.setTime(new Date());
         calYesterday.add(Calendar.DATE, -1);
         Date date = new Date();
-        System.out.println(date.getDate());
-        System.out.println(eventDates[2]);
         if(date.getDate()==(Integer.parseInt(eventDates[2]))) {
-                        newEvent.setDateResponse("Today, at" + event.getEventDateHour());
+                        newEvent.setDateResponse("Today, at " + event.getEventDateHour());
         }
         else if (date.getDate()==(Integer.parseInt(eventDates[2])-1)) {
-            newEvent.setDateResponse("Tomorrow, at" + event.getEventDateHour());
+            newEvent.setDateResponse("Tomorrow, at " + event.getEventDateHour());
         }
         else if (date.getDate()==(Integer.parseInt(eventDates[2])+1)) {
-            newEvent.setDateResponse("Yesterday, at" + event.getEventDateHour());
+            newEvent.setDateResponse("Yesterday, at " + event.getEventDateHour());
         }
         else{
-            newEvent.setDateResponse(eventDate.toString());
+            newEvent.setDateResponse(event.getEventDate() + ", at "+ event.getEventDateHour());
         }
 
         this.eventRepository.save(newEvent);
