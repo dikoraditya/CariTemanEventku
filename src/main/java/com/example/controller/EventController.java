@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,13 +45,6 @@ public class EventController {
     public String healthy() {
         // Message body required though ignored
         return "Still surviving.";
-    }
-
-    @PostMapping
-    @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-    @ApiOperation(value = "Save user", notes = "save user info to DB")
-    public void saveEvent(@RequestBody @Valid Event event) throws Exception{
-        this.eventRepository.save(BeanMapper.map(event, Event.class));
     }
 
     @GetMapping
@@ -98,9 +92,29 @@ public class EventController {
                 Integer.parseInt(eventDates[1]), Integer.parseInt(eventDates[2]),
                 Integer.parseInt(eventDateTime[0]), Integer.parseInt(eventDateTime[1]));
         newEvent.setEventDate(eventDate);
+        Calendar calTomorrow = Calendar.getInstance();
+        calTomorrow.setTime(new Date());
+        calTomorrow.add(Calendar.DATE, 1);
+        Calendar calYesterday = Calendar.getInstance();
+        calYesterday.setTime(new Date());
+        calYesterday.add(Calendar.DATE, -1);
+        Date date = new Date();
+        System.out.println(date.getDate());
+        System.out.println(eventDates[2]);
+        if(date.getDate()==(Integer.parseInt(eventDates[2]))) {
+                        newEvent.setDateResponse("Today, at" + event.getEventDateHour());
+        }
+        else if (date.getDate()==(Integer.parseInt(eventDates[2])-1)) {
+            newEvent.setDateResponse("Tomorrow, at" + event.getEventDateHour());
+        }
+        else if (date.getDate()==(Integer.parseInt(eventDates[2])+1)) {
+            newEvent.setDateResponse("Yesterday, at" + event.getEventDateHour());
+        }
+        else{
+            newEvent.setDateResponse(eventDate.toString());
+        }
+
         this.eventRepository.save(newEvent);
-        
-        
         return true;
     }
 

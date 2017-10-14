@@ -45,8 +45,20 @@ public class Event implements Serializable{
     @Field(value = "totalPeople")
     private int totalPeople;
 
-    @Field(value = "quantity")
-    private int quantity;
+    @Field(value = "quota")
+    private int quota;
+
+    @Field(value = "backgroundImg")
+    private String backgroundImg;
+
+    @Field(value = "hostImg")
+    private String hostImg;
+
+    @Field(value = "hostedBy")
+    private String hostedBy;
+
+    @Field(value = "dateResponse")
+    private String dateResponse;
 
     @Field(value = "markForDelete")
     private boolean markForDelete;
@@ -129,20 +141,52 @@ public class Event implements Serializable{
         this.totalPeople = totalPeople;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public boolean isMarkForDelete() {
         return markForDelete;
     }
 
     public void setMarkForDelete(boolean markForDelete) {
         this.markForDelete = markForDelete;
+    }
+
+    public int getQuota() {
+        return quota;
+    }
+
+    public void setQuota(int quota) {
+        this.quota = quota;
+    }
+
+    public String getBackgroundImg() {
+        return backgroundImg;
+    }
+
+    public void setBackgroundImg(String backgroundImg) {
+        this.backgroundImg = backgroundImg;
+    }
+
+    public String getHostImg() {
+        return hostImg;
+    }
+
+    public void setHostImg(String hostImg) {
+        this.hostImg = hostImg;
+    }
+
+    public String gethostedBy() {
+        return hostedBy;
+    }
+
+    public void sethostedBy(String hostedBy) {
+        this.hostedBy = hostedBy;
+    }
+
+    public String getDateResponse() {
+        return dateResponse;
+    }
+
+    public void setDateResponse(String dateResponse) {
+        this.dateResponse = dateResponse;
     }
 
     @Override
@@ -157,7 +201,11 @@ public class Event implements Serializable{
                 ", eventName='" + eventName + '\'' +
                 ", location='" + location + '\'' +
                 ", totalPeople=" + totalPeople +
-                ", quantity=" + quantity +
+                ", quota=" + quota +
+                ", backgroundImg='" + backgroundImg + '\'' +
+                ", hostImg='" + hostImg + '\'' +
+                ", hostedBy='" + hostedBy + '\'' +
+                ", dateResponse='" + dateResponse + '\'' +
                 ", markForDelete=" + markForDelete +
                 '}';
     }

@@ -14,7 +14,6 @@ public class EventRequest implements Serializable{
     private static final long serialVersionUID = -754705079627771682L;
 
     private String category;
-    private Date createdDate;
     private String eventDate;
     private String eventDateHour;
     private String status;
@@ -22,7 +21,8 @@ public class EventRequest implements Serializable{
     private String eventName;
     private String location;
     private int totalPeople;
-    private int quantity;
+    private int quota;
+    private String hostedBy;
 
     public EventRequest(){}
 
@@ -90,19 +90,35 @@ public class EventRequest implements Serializable{
         this.totalPeople = totalPeople;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getquota() {
+        return quota;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setquota(int quota) {
+        this.quota = quota;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public String getHostedBy() {
+        return hostedBy;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setHostedBy(String hostedBy) {
+        this.hostedBy = hostedBy;
+    }
+
+    @Override
+    public String toString() {
+        return "EventRequest{" +
+                "category='" + category + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", eventDateHour='" + eventDateHour + '\'' +
+                ", status='" + status + '\'' +
+                ", isPrivate=" + isPrivate +
+                ", eventName='" + eventName + '\'' +
+                ", location='" + location + '\'' +
+                ", totalPeople=" + totalPeople +
+                ", quota=" + quota +
+                ", hostedBy='" + hostedBy + '\'' +
+                '}';
     }
 }
