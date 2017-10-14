@@ -6,7 +6,6 @@ import com.example.model.PostinganResponse;
 import com.example.repository.CommentRepository;
 import com.example.repository.PostinganRepository;
 import com.example.request.PostinganRequest;
-import com.example.utility.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;

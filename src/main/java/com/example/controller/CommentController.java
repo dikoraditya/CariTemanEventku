@@ -2,11 +2,9 @@ package com.example.controller;
 
 import com.example.model.Comment;
 import com.example.model.CommentResponse;
-import com.example.model.Postingan;
 import com.example.repository.CommentRepository;
 import com.example.repository.PostinganRepository;
 import com.example.request.CommentRequest;
-import com.example.utility.BeanMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

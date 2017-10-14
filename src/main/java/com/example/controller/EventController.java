@@ -6,12 +6,13 @@ import com.example.repository.CommentRepository;
 import com.example.repository.EventRepository;
 import com.example.repository.PostinganRepository;
 import com.example.request.EventRequest;
-import com.example.utility.BeanMapper;
+import com.example.utility.ImageUploader;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -111,7 +112,8 @@ public class EventController {
 
     @PostMapping(value = "/createEvent")
     @ApiOperation(value = "Create New Event", notes =  "Create new event")
-    public Boolean createNewEvent(@RequestBody EventRequest event) throws Exception
+    public Boolean createNewEvent(@ModelAttribute EventRequest event, @RequestParam MultipartFile backgroundImage,
+                                  @RequestParam MultipartFile hostImage) throws Exception
     {
         Event newEvent = new Event();
         BeanUtils.copyProperties(event, newEvent);
@@ -137,6 +139,7 @@ public class EventController {
         else{
             newEvent.setDateResponse(sdfDay.format(eventDate) + ", "+ sdfMonth.format(eventDate) + " " + eventDates[2] + " at " + event.getEventDateHour());
         }
+        ImageUploader.uploadEventImage(backgroundImage, hostImage, newEvent);
         this.eventRepository.save(newEvent);
         return true;
     }
@@ -152,6 +155,16 @@ public class EventController {
         BeanUtils.copyProperties(event, existing, "id", "markForDelete");
         this.eventRepository.save(existing);
 
+        return true;
+    }
+
+    @PostMapping(value = "/testUpload")
+    public Boolean testUpload(@RequestParam MultipartFile file) throws Exception
+    {
+        Event a = new Event();
+        a.setEventName("Taylor Swift");
+        a.setHostedBy("Kevin");
+        ImageUploader.uploadEventImage(file, file, a);
         return true;
     }
 

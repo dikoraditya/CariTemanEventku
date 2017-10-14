@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by diko.raditya on 31/08/2017.
@@ -68,6 +69,7 @@ public class Event implements Serializable{
 
     public Event()
     {
+        this.setEventId(UUID.randomUUID().toString());
         this.setCreatedDate(new Date());
         this.setMarkForDelete(false);
     }
