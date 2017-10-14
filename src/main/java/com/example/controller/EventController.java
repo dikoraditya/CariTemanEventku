@@ -77,14 +77,13 @@ public class EventController {
         EventResponseSingle eventResponseSingle = new EventResponseSingle();
         try{
             Event event = this.eventRepository.findByEventIdAndMarkForDeleteIsFalse(eventId);
-            List<Event> eventList = new ArrayList<>();
-            eventList.add(event);
-            eventResponseSingle.setResults(eventList);
+            eventResponseSingle.setResult(event);
         } catch (Exception e) {
             eventResponseSingle.setStatus("Failed");
             eventResponseSingle.setMessage(e.getMessage());
             return  eventResponseSingle;
         }
+        System.out.println(System.getProperty("catalina.home"));
         eventResponseSingle.setStatus("success");
         eventResponseSingle.setMessage("success");
         return eventResponseSingle;
@@ -145,7 +144,7 @@ public class EventController {
     @ApiOperation(value = "Update Event", notes =  "Update event")
     public Boolean updateEvent(@RequestBody EventRequest event, @RequestParam String eventId) throws Exception
     {
-        Event existing = this.findEventByEventId(eventId).getResults().get(0);
+        Event existing = this.findEventByEventId(eventId).getResult();
         if(existing == null)
             throw new IllegalStateException("Event does not exist. Failed to update event");
 

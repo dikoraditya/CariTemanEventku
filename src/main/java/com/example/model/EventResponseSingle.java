@@ -12,16 +12,16 @@ import java.util.List;
 public class EventResponseSingle implements Serializable{
     private static final long serialVersionUID = -7818696638456877478L;
 
-    private List<Event> results;
+    private Event result;
     private String status;
     private String message;
 
-    public List<Event> getResults() {
-        return results;
+    public Event getResult() {
+        return result;
     }
 
-    public void setResults(List<Event> results) {
-        this.results = results;
+    public void setResult(Event result) {
+        this.result = result;
     }
 
     public String getStatus() {
@@ -43,7 +43,7 @@ public class EventResponseSingle implements Serializable{
     @Override
     public String toString() {
         return "EventResponse{" +
-                ", results=" + results +
+                ", result=" + result +
                 ", status='" + status + '\'' +
                 ", message='" + message + '\'' +
                 '}';
